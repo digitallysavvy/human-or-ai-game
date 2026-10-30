@@ -10,12 +10,12 @@ const LABELS = ['Ink', 'Human', 'AI']
 export function HeroOrb() {
   const [level, setLevel] = useState(0)
   const [hueIndex, setHueIndex] = useState(0)
-  const [size, setSize] = useState(220)
+  const [size, setSize] = useState(280)
   const last = useRef<{ x: number; y: number; t: number } | null>(null)
   const energy = useRef(0)
 
   useEffect(() => {
-    const update = () => setSize(window.innerWidth < 640 ? 180 : 220)
+    const update = () => setSize(window.innerWidth < 640 ? 180 : 280)
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
