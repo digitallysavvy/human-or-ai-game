@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import { useProfile } from '@/lib/local-store'
+import { validateHandle } from '@/lib/handle-filter'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -30,8 +31,7 @@ export function JoinForm() {
     const cleanName = name.trim()
     const cleanEmail = email.trim()
     const next: Errors = {}
-    if (cleanName.length < 2) next.name = 'At least two characters.'
-    else if (cleanName.length > 24) next.name = 'Keep it under 24 characters.'
+    next.name = validateHandle(cleanName)
     if (!cleanEmail) next.email = 'Email is required.'
     else if (!EMAIL_RE.test(cleanEmail)) next.email = 'That doesn\u2019t look like an email.'
     if (!agreed) next.agree = 'You need to agree to play.'
