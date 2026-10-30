@@ -54,5 +54,6 @@ export type LocalStats = {
 
 export type Profile = {
   name: string
+  email: string
   createdAt: number
 }

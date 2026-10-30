@@ -5,8 +5,9 @@ import { Orb } from '@/components/orb'
 import { PALETTE_HUES as HUES } from '@/lib/theme'
 
 const LABELS = ['Ink', 'Human', 'AI']
+const CYCLE_MS = 3200
 
-/** Landing orb: pointer speed becomes "voice" level; clicking changes its mood. */
+/** Landing orb: pointer speed becomes "voice" level; its mood cycles on its own. */
 export function HeroOrb() {
   const [level, setLevel] = useState(0)
   const [hueIndex, setHueIndex] = useState(0)
@@ -19,6 +20,14 @@ export function HeroOrb() {
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      energy.current = Math.max(energy.current, 0.6)
+      setHueIndex((i) => (i + 1) % HUES.length)
+    }, CYCLE_MS)
+    return () => window.clearInterval(id)
   }, [])
 
   useEffect(() => {
@@ -44,31 +53,15 @@ export function HeroOrb() {
     last.current = { x: e.clientX, y: e.clientY, t: now }
   }
 
-  function cycle() {
-    energy.current = 1
-    setHueIndex((i) => (i + 1) % HUES.length)
-  }
-
   return (
     <div
       onPointerMove={onMove}
       onPointerLeave={() => (last.current = null)}
-      onClick={cycle}
-      className="relative flex cursor-pointer flex-col items-center gap-4 select-none"
-      role="button"
-      tabIndex={0}
-      aria-label="Interactive voice orb. Move your cursor or click."
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          cycle()
-        }
-      }}
+      className="relative flex flex-col items-center gap-4 select-none"
+      aria-hidden
     >
       <Orb level={level} hue={HUES[hueIndex]} size={size} idle={0.08} />
-      <span className="font-mono text-xs tracking-[0.25em] uppercase">
-        Mode: {LABELS[hueIndex]} · Click to switch
-      </span>
+      <span className="font-mono text-xs tracking-[0.25em] uppercase">Mode: {LABELS[hueIndex]}</span>
     </div>
   )
 }

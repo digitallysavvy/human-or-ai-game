@@ -38,7 +38,7 @@ export default function JoinPage() {
 
       <section className="grid flex-1 border-b-2 border-foreground lg:grid-cols-[1.15fr_1fr]">
         <div className="flex flex-col border-b-2 border-foreground lg:border-r-2 lg:border-b-0">
-          <CellHeader left="01 / The question" right="Move your cursor over the blob" />
+          <CellHeader left="01 / The question" right="Sixty seconds. One call." />
           <div className="grid flex-1 items-center gap-6 px-5 py-8 sm:grid-cols-[1fr_auto] sm:px-8">
             <div className="flex flex-col gap-4">
               <h1 className="text-[clamp(3rem,7.5vw,7rem)] leading-[0.85] font-black tracking-[-0.05em] uppercase">

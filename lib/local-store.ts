@@ -60,8 +60,8 @@ export function useProfile() {
   )
   const profile: Profile | null | 'loading' = raw === 'loading' ? 'loading' : parse<Profile | null>(raw, null)
 
-  const setProfile = useCallback((name: string) => {
-    const next: Profile = { name: name.trim(), createdAt: Date.now() }
+  const setProfile = useCallback((name: string, email: string) => {
+    const next: Profile = { name: name.trim(), email: email.trim().toLowerCase(), createdAt: Date.now() }
     writeRaw(PROFILE_KEY, JSON.stringify(next))
   }, [])
 

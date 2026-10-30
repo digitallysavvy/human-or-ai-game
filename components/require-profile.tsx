@@ -14,8 +14,10 @@ export function useRequiredProfile(): Profile {
 }
 
 export function RequireProfile({ children }: { children: React.ReactNode }) {
-  const { profile } = useProfile()
+  const { profile: stored } = useProfile()
   const router = useRouter()
+  // Profiles saved before email was required are treated as incomplete.
+  const profile = stored !== 'loading' && stored && !stored.email ? null : stored
 
   useEffect(() => {
     if (profile === null) router.replace('/')
