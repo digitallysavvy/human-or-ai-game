@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Orb } from '@/components/orb'
 import { PALETTE_HUES as HUES } from '@/lib/theme'
 
-const LABELS = ['Undecided', 'Sounds human', 'Sounds synthetic']
+const LABELS = ['Who picked up?', 'A real person?', 'Or an AI?']
 const CYCLE_MS = 3200
 
 /** Landing orb: pointer speed becomes "voice" level; its mood cycles on its own. */
