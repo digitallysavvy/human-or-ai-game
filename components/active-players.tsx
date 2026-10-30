@@ -12,8 +12,13 @@ export function ActivePlayers({ className }: { className?: string }) {
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      setCount((c) => Math.max(900, c + Math.round((Math.random() - 0.45) * 14)))
-    }, 3500)
+      setCount((c) => {
+        const jitter = (Math.random() - 0.5) * 24
+        const pullToBase = (BASE - c) * 0.2
+        const delta = Math.round(jitter + pullToBase)
+        return c + (delta === 0 ? (Math.random() < 0.5 ? -1 : 1) : delta)
+      })
+    }, 2500)
     return () => window.clearInterval(id)
   }, [])
 
