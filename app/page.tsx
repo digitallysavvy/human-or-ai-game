@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Radio } from 'lucide-react'
 import { ActivePlayers } from '@/components/active-players'
 import { HeroOrb } from '@/components/hero-orb'
@@ -103,7 +104,9 @@ export default function JoinPage() {
 
       <footer className="flex items-center justify-between px-5 py-4 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
         <span>Turing Line</span>
-        <span>Calls are never recorded · Scores stay on your device</span>
+        <Link href="/rules" className="underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline">
+          Rules &amp; code of conduct
+        </Link>
       </footer>
     </main>
   )

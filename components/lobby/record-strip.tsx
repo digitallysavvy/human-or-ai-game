@@ -21,7 +21,7 @@ export function RecordStrip() {
       <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <div className="flex items-center gap-1.5" aria-label="Recent rounds">
           {stats.history.length === 0 ? (
-            <p className="font-mono text-xs tracking-[0.15em] text-muted-foreground uppercase">No rounds yet. Scores save on this device.</p>
+            <p className="font-mono text-xs tracking-[0.15em] text-muted-foreground uppercase">No rounds yet. Play one to get on the board.</p>
           ) : (
             stats.history.slice(0, 12).reverse().map((r) => (
               <span
