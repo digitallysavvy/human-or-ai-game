@@ -1,46 +1,44 @@
 'use client'
 
 import Link from 'next/link'
-import { PhoneCall } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
-import { MicCheck } from '@/components/lobby/mic-check'
-import { StatsPanel } from '@/components/lobby/stats-panel'
+import { Zap } from 'lucide-react'
+import { ActivePlayers } from '@/components/active-players'
+import { MicStage } from '@/components/lobby/mic-stage'
+import { RecordStrip } from '@/components/lobby/record-strip'
 import { useRequiredProfile } from '@/components/require-profile'
-import { cn } from '@/lib/utils'
 
 export function LobbyView() {
   const profile = useRequiredProfile()
+
   return (
-    <div className="grid flex-1 gap-8 py-6 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
-      <section className="flex flex-col gap-8">
-        <div className="flex flex-col gap-3">
-          <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">Lobby</p>
-          <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-            Ready when you are, {profile.name}.
-          </h1>
-          <p className="max-w-md text-muted-foreground">
-            Check your mic, then pick up. You&apos;ll be connected to a random caller. Each call runs sixty seconds,
-            you make your call, and the line connects you to the next one until you hang up.
-          </p>
-        </div>
+    <div className="flex flex-1 flex-col items-center justify-center gap-10 py-6 text-center">
+      <div className="flex flex-col items-center gap-3">
+        <ActivePlayers className="mb-2" />
+        <h1 className="text-[clamp(2.25rem,6vw,4.5rem)] leading-[0.95] font-semibold tracking-[-0.03em] text-balance">
+          Ready, <span className="font-serif font-normal text-primary italic">{profile.name}</span>?
+        </h1>
+        <p className="max-w-md text-muted-foreground">
+          Say something and watch the orb. Then connect — you&apos;ll keep getting new voices until you leave.
+        </p>
+      </div>
 
-        <MicCheck />
+      <MicStage />
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Link
-            href="/call"
-            className={cn(buttonVariants({ size: 'lg' }), 'h-14 flex-1 text-base sm:flex-none sm:px-8')}
-          >
-            <PhoneCall data-icon="inline-start" aria-hidden />
-            Pick up
-          </Link>
-          <p className="text-sm text-muted-foreground">
-            Mic optional. If speech recognition isn&apos;t available you can type.
-          </p>
-        </div>
-      </section>
+      <div className="relative flex items-center justify-center">
+        <span className="ring-pulse absolute inset-0 rounded-full border-2 border-primary/60" aria-hidden />
+        <span className="ring-pulse absolute inset-0 rounded-full border-2 border-primary/40" style={{ animationDelay: '0.6s' }} aria-hidden />
+        <Link
+          href="/call"
+          className="group relative flex h-16 items-center gap-3 rounded-full bg-primary pr-8 pl-3 text-lg font-semibold text-primary-foreground glow-primary transition-transform outline-none hover:scale-[1.03] focus-visible:ring-4 focus-visible:ring-primary/40 active:scale-95"
+        >
+          <span className="flex size-10 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform group-hover:-rotate-12">
+            <Zap className="size-5" aria-hidden />
+          </span>
+          Connect
+        </Link>
+      </div>
 
-      <StatsPanel />
+      <RecordStrip />
     </div>
   )
 }

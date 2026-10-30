@@ -1,37 +1,49 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { PhoneOff } from 'lucide-react'
+import { X } from 'lucide-react'
+import { Orb } from '@/components/orb'
 import { Button } from '@/components/ui/button'
 
-const LINES = ['Dialing the line…', 'Looking for a voice…', 'Someone picked up…']
+const LINES = ['Finding a connection', 'Someone\u2019s out there', 'Connecting you']
+const GLYPHS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789'
 
 export function MatchingScreen({ name, onCancel }: { name: string; onCancel: () => void }) {
   const [step, setStep] = useState(0)
+  const [scramble, setScramble] = useState('——————')
 
   useEffect(() => {
-    const id = window.setInterval(() => setStep((s) => Math.min(s + 1, LINES.length - 1)), 900)
-    return () => window.clearInterval(id)
+    const stepId = window.setInterval(() => setStep((s) => Math.min(s + 1, LINES.length - 1)), 900)
+    const scrambleId = window.setInterval(() => {
+      setScramble(Array.from({ length: 6 }, () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]).join(''))
+    }, 70)
+    return () => {
+      window.clearInterval(stepId)
+      window.clearInterval(scrambleId)
+    }
   }, [])
 
   return (
     <section className="flex flex-1 flex-col items-center justify-center gap-10 py-12 text-center" aria-live="polite">
-      <div className="relative flex size-44 items-center justify-center">
-        <span className="ring-pulse absolute inset-0 rounded-full border border-primary/60" />
-        <span className="ring-pulse absolute inset-0 rounded-full border border-primary/60" style={{ animationDelay: '0.8s' }} />
-        <span className="dial-spin absolute inset-3 rounded-full border-2 border-dashed border-primary/40" />
-        <span className="flex size-28 items-center justify-center rounded-full bg-card font-mono text-3xl font-semibold text-primary shadow-xl shadow-black/40">
-          {name.slice(0, 2).toUpperCase()}
+      <div className="relative flex items-center justify-center">
+        <span className="ring-pulse absolute size-56 rounded-full border border-foreground/30" aria-hidden />
+        <span className="ring-pulse absolute size-56 rounded-full border border-foreground/20" style={{ animationDelay: '0.9s' }} aria-hidden />
+        <Orb hueDrift active size={260} idle={0.1} />
+        <span className="absolute font-mono text-sm tracking-[0.4em] text-background/80 mix-blend-difference" aria-hidden>
+          {scramble}
         </span>
       </div>
       <div className="flex flex-col gap-2">
-        <p className="font-mono text-xs tracking-[0.2em] text-primary uppercase">Connecting</p>
-        <h1 className="text-3xl font-semibold tracking-tight">{LINES[step]}</h1>
-        <p className="text-sm text-muted-foreground">Could be anyone. Could be anything.</p>
+        <p className="text-xs tracking-[0.28em] text-primary uppercase">Connecting {name}</p>
+        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+          {LINES[step]}
+          <span className="blink">…</span>
+        </h1>
+        <p className="font-serif text-xl text-muted-foreground italic">Could be anyone. Could be anything.</p>
       </div>
-      <Button variant="ghost" onClick={onCancel}>
-        <PhoneOff data-icon="inline-start" aria-hidden />
-        Back to lobby
+      <Button variant="ghost" onClick={onCancel} className="text-muted-foreground">
+        <X data-icon="inline-start" aria-hidden />
+        Cancel
       </Button>
     </section>
   )

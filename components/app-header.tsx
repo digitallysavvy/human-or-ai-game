@@ -21,7 +21,7 @@ export function AppHeader() {
       {profile && profile !== 'loading' && (
         <div className="flex items-center gap-3">
           <span className="hidden text-sm text-muted-foreground sm:inline">
-            on the line as <span className="font-medium text-foreground">{profile.name}</span>
+            playing as <span className="font-serif text-base text-foreground italic">{profile.name}</span>
           </span>
           <Button
             variant="ghost"

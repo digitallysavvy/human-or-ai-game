@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight } from 'lucide-react'
+import { Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { useProfile } from '@/lib/local-store'
 
 export function JoinForm() {
@@ -20,46 +19,41 @@ export function JoinForm() {
   function submit(e: React.FormEvent) {
     e.preventDefault()
     const clean = name.trim()
-    if (clean.length < 2) {
-      setError('Give us at least two characters.')
-      return
-    }
-    if (clean.length > 24) {
-      setError('Keep it under 24 characters.')
-      return
-    }
+    if (clean.length < 2) return setError('At least two characters.')
+    if (clean.length > 24) return setError('Keep it under 24 characters.')
     setProfile(clean)
     router.push('/lobby')
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-3">
-      <label htmlFor="handle" className="sr-only">
-        Display name
-      </label>
-      <Input
-        id="handle"
-        name="handle"
-        autoComplete="nickname"
-        placeholder="e.g. late-night-sam"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value)
-          setError(null)
-        }}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? 'handle-error' : undefined}
-        className="h-12 text-base"
-        autoFocus
-      />
-      {error && (
-        <p id="handle-error" className="text-sm text-destructive">
-          {error}
+    <form onSubmit={submit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <label htmlFor="handle" className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
+          Your handle
+        </label>
+        <input
+          id="handle"
+          name="handle"
+          autoComplete="nickname"
+          placeholder="late-night-sam"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value)
+            setError(null)
+          }}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? 'handle-error' : 'handle-hint'}
+          className="h-14 w-full border-0 border-b border-input bg-transparent px-0 font-serif text-3xl text-foreground italic outline-none placeholder:text-muted-foreground/40 focus-visible:border-primary"
+        />
+        <p id={error ? 'handle-error' : 'handle-hint'} className={error ? 'text-sm text-destructive' : 'text-xs text-muted-foreground'}>
+          {error ?? 'It\u2019s what the other player sees. Scores stay on this device.'}
         </p>
-      )}
-      <Button type="submit" size="lg" className="h-12 text-base">
-        Get on the line
-        <ArrowRight data-icon="inline-end" aria-hidden />
+      </div>
+      <Button type="submit" size="lg" className="group h-13 justify-between rounded-full pr-2 pl-6 text-base">
+        Join the game
+        <span className="flex size-9 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform group-hover:rotate-12 group-hover:scale-110">
+          <Zap className="size-4" aria-hidden />
+        </span>
       </Button>
     </form>
   )

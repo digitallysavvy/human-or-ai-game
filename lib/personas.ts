@@ -100,7 +100,7 @@ export const PERSONAS: Persona[] = [
     kind: 'ai',
     name: 'Sol',
     vibe: 'upbeat, sounds like a morning show',
-    hue: 60,
+    hue: 170,
     voiceRate: 1.0,
     voicePitch: 1.05,
     opener: "Hey there! Great to meet you. I'm Sol. How's your day treating you so far?",

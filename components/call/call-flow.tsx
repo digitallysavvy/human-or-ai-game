@@ -49,6 +49,7 @@ export function CallFlow() {
   const timersRef = useRef<number[]>([])
   const bootedRef = useRef(false)
   const matchTokenRef = useRef(0)
+  const submittingRef = useRef(false)
 
   phaseRef.current = phase
   roundRef.current = round
@@ -191,7 +192,7 @@ export function CallFlow() {
   }, [phase])
 
   const goToVerdict = useCallback(() => {
-    if (phaseRef.current !== 'live') return
+    if (phaseRef.current !== 'live' || submittingRef.current) return
     clearTimers()
     cancelSpeech()
     recognitionStop()
@@ -224,6 +225,20 @@ export function CallFlow() {
       setPhase('reveal')
     },
     [beginMatching, recordRound, submitting],
+  )
+
+  const guessFromLive = useCallback(
+    (guess: Guess) => {
+      if (phaseRef.current !== 'live' || submittingRef.current) return
+      submittingRef.current = true
+      clearTimers()
+      cancelSpeech()
+      recognitionStop()
+      void handleGuess(guess).finally(() => {
+        submittingRef.current = false
+      })
+    },
+    [clearTimers, cancelSpeech, recognitionStop, handleGuess],
   )
 
   useEffect(() => {
@@ -267,12 +282,12 @@ export function CallFlow() {
         listening={recognition.listening}
         interim={recognition.interim}
         speechSupported={recognition.supported}
-        speakerEnabled={speaker.enabled}
-        onToggleSpeaker={() => speaker.setEnabled(!speaker.enabled)}
-        onSend={handleUserText}
         canDecide={CALL_SECONDS - secondsLeft >= DECIDE_UNLOCK_SECONDS}
-        onDecide={goToVerdict}
-        onHangUp={hangUp}
+        decideInSeconds={Math.max(0, DECIDE_UNLOCK_SECONDS - (CALL_SECONDS - secondsLeft))}
+        unlockSeconds={DECIDE_UNLOCK_SECONDS}
+        busy={submitting}
+        onGuess={guessFromLive}
+        onExit={hangUp}
       />
     )
   }
