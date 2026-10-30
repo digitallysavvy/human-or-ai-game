@@ -109,7 +109,7 @@ export function JoinForm() {
             className="mt-0.5 size-5 shrink-0 cursor-pointer accent-foreground"
           />
           <span>
-            I&apos;ll keep it clean: no swearing at people, nothing sexual. I agree to the{' '}
+            I agree to the{' '}
             <Link href="/rules" className="font-bold underline underline-offset-4 outline-none focus-visible:bg-foreground focus-visible:text-background">
               rules &amp; code of conduct
             </Link>
