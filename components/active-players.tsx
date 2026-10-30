@@ -18,13 +18,11 @@ export function ActivePlayers({ className }: { className?: string }) {
   }, [])
 
   return (
-    <div className={cn('glass flex items-center gap-2.5 rounded-full py-1.5 pr-4 pl-2.5 text-sm', className)} aria-live="polite">
-      <span className="relative flex size-2.5">
-        <span className="absolute inset-0 animate-ping rounded-full bg-human/70" />
-        <span className="relative size-2.5 rounded-full bg-human" />
+    <div className={cn('flex items-center gap-3 font-mono text-xs tracking-[0.2em] uppercase', className)} aria-live="polite">
+      <span className="blink size-2.5 bg-human" aria-hidden />
+      <span>
+        <Counter value={count} className="font-bold tabular-nums" /> online
       </span>
-      <Counter value={count} className="font-semibold tabular-nums" />
-      <span className="text-muted-foreground">in the game</span>
     </div>
   )
 }

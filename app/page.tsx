@@ -19,68 +19,88 @@ const TELLS = [
 const STEPS = [
   { n: '01', title: 'Get connected', body: 'You\u2019re matched with a random voice. No face. No profile.' },
   { n: '02', title: 'Talk for a minute', body: 'Ask anything. Listen for the tells.' },
-  { n: '03', title: 'Call it', body: 'Human or AI. The reveal is instant. Then you&apos;re matched again.' },
+  { n: '03', title: 'Call it', body: 'Human or AI. The reveal is instant. Then you\u2019re matched again.' },
 ]
 
 export default function JoinPage() {
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-7xl flex-col overflow-hidden px-5 sm:px-8">
-      <div className="flex items-center justify-between py-5">
-        <div className="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Radio className="size-4" aria-hidden />
-          </span>
+    <main className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col border-foreground sm:border-x-2">
+      <header className="grid grid-cols-[auto_1fr_auto] items-stretch border-b-2 border-foreground">
+        <div className="flex items-center gap-3 border-r-2 border-foreground px-5 py-4 text-sm font-black tracking-tight uppercase">
+          <Radio className="size-5" aria-hidden />
           Turing Line
         </div>
-        <ActivePlayers />
-      </div>
+        <p className="hidden items-center justify-center font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase md:flex">
+          Voice roulette · 60-second rounds · No faces
+        </p>
+        <ActivePlayers className="border-l-2 border-foreground px-5" />
+      </header>
 
-      <section className="grid flex-1 items-center gap-10 py-8 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
-        <div className="flex flex-col gap-9">
-          <div className="flex flex-col gap-5">
-            <p className="text-xs tracking-[0.28em] text-primary uppercase">Voice roulette</p>
-            <h1 className="text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.92] font-semibold tracking-[-0.03em] text-balance">
-              Human or AI?
-              <br />
-              <span className="font-serif font-normal text-primary italic">You decide.</span>
-            </h1>
-            <p className="max-w-md text-lg leading-relaxed text-pretty text-muted-foreground">
-              Get connected to a stranger&apos;s voice. Talk for sixty seconds. Then make the call.
-            </p>
+      <section className="grid border-b-2 border-foreground lg:grid-cols-[1.15fr_1fr]">
+        <div className="flex flex-col border-b-2 border-foreground lg:border-r-2 lg:border-b-0">
+          <CellHeader left="01 / The question" right="Move your cursor over the blob" />
+          <div className="grid flex-1 items-center gap-6 px-5 py-8 sm:grid-cols-[1fr_auto] sm:px-8">
+            <div className="flex flex-col gap-4">
+              <h1 className="text-[clamp(2.75rem,6vw,5.5rem)] leading-[0.85] font-black tracking-[-0.05em] uppercase">
+                Human
+                <br />
+                or AI?
+                <br />
+                <span className="text-outline">You decide.</span>
+              </h1>
+              <p className="max-w-sm text-base leading-snug text-pretty text-muted-foreground">
+                Get connected to a stranger&apos;s voice. Talk for sixty seconds. Then make the call.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <HeroOrb />
+            </div>
           </div>
-
-          <div className="glass max-w-md rounded-2xl p-5 sm:p-6">
+        </div>
+        <div className="flex flex-col">
+          <CellHeader left="02 / Enter" right="Scores stay on device" />
+          <div className="flex flex-1 flex-col justify-center px-5 py-8 sm:px-8">
             <JoinForm />
           </div>
         </div>
-
-        <div className="flex items-center justify-center lg:justify-end">
-          <HeroOrb />
-        </div>
       </section>
 
-      <div className="relative -mx-5 overflow-hidden border-y py-3 text-sm whitespace-nowrap sm:-mx-8" aria-label="Tells to listen for">
-        <div className="marquee flex w-max gap-10">
+      <div className="overflow-hidden border-b-2 border-foreground py-3 font-mono text-sm tracking-wide uppercase" aria-label="Tells to listen for">
+        <div className="marquee flex w-max">
           {[...TELLS, ...TELLS].map((tell, i) => (
-            <span key={i} className="flex items-center gap-10 text-muted-foreground">
-              <span className="font-serif text-lg italic">{tell}</span>
-              <span className="size-1 rounded-full bg-primary" aria-hidden />
+            <span key={i} className="flex items-center">
+              <span className="px-6">{tell}</span>
+              <span className="size-2 bg-foreground" aria-hidden />
             </span>
           ))}
         </div>
       </div>
 
-      <ol className="grid gap-6 py-10 sm:grid-cols-3">
+      <ol className="grid divide-y-2 divide-foreground border-b-2 border-foreground sm:grid-cols-3 sm:divide-x-2 sm:divide-y-0">
         {STEPS.map((step) => (
-          <li key={step.n} className="flex gap-4">
-            <span className="font-serif text-3xl text-primary italic">{step.n}</span>
+          <li key={step.n} className="flex flex-col gap-4 p-6">
+            <span className="font-mono text-5xl font-bold tracking-tighter">{step.n}</span>
             <div className="flex flex-col gap-1">
-              <p className="font-medium">{step.title}</p>
+              <p className="text-lg font-black tracking-tight uppercase">{step.title}</p>
               <p className="text-sm leading-relaxed text-muted-foreground">{step.body}</p>
             </div>
           </li>
         ))}
       </ol>
+
+      <footer className="flex items-center justify-between px-5 py-4 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
+        <span>Turing Line</span>
+        <span>No accounts · No recordings</span>
+      </footer>
     </main>
+  )
+}
+
+function CellHeader({ left, right }: { left: string; right: string }) {
+  return (
+    <div className="flex items-center justify-between border-b-2 border-foreground px-5 py-2 font-mono text-xs tracking-[0.25em] uppercase">
+      <span>{left}</span>
+      <span className="text-muted-foreground">{right}</span>
+    </div>
   )
 }

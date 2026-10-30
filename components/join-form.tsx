@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Zap } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 import { useProfile } from '@/lib/local-store'
 
 export function JoinForm() {
@@ -26,16 +25,16 @@ export function JoinForm() {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="handle" className="text-xs tracking-[0.2em] text-muted-foreground uppercase">
+    <form onSubmit={submit} className="flex max-w-md flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="handle" className="font-mono text-xs tracking-[0.25em] uppercase">
           Your handle
         </label>
         <input
           id="handle"
           name="handle"
           autoComplete="nickname"
-          placeholder="late-night-sam"
+          placeholder="LATE-NIGHT-SAM"
           value={name}
           onChange={(e) => {
             setName(e.target.value)
@@ -43,18 +42,19 @@ export function JoinForm() {
           }}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? 'handle-error' : 'handle-hint'}
-          className="h-14 w-full border-0 border-b border-input bg-transparent px-0 font-serif text-3xl text-foreground italic outline-none placeholder:text-muted-foreground/40 focus-visible:border-primary"
+          className="h-16 w-full border-2 border-foreground bg-background px-4 font-mono text-2xl font-bold tracking-tight uppercase outline-none placeholder:text-muted-foreground/50 focus-visible:brut-shadow aria-invalid:border-destructive"
         />
-        <p id={error ? 'handle-error' : 'handle-hint'} className={error ? 'text-sm text-destructive' : 'text-xs text-muted-foreground'}>
-          {error ?? 'It\u2019s what the other player sees. Scores stay on this device.'}
+        <p id={error ? 'handle-error' : 'handle-hint'} className={error ? 'font-mono text-xs text-destructive uppercase' : 'text-sm text-muted-foreground'}>
+          {error ?? 'It\u2019s what the other player sees.'}
         </p>
       </div>
-      <Button type="submit" size="lg" className="group h-13 justify-between rounded-full pr-2 pl-6 text-base">
+      <button
+        type="submit"
+        className="btn-brut flex h-14 items-center justify-between bg-foreground px-5 text-lg font-black tracking-tight text-background uppercase outline-none focus-visible:ring-4 focus-visible:ring-ring"
+      >
         Join the game
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary-foreground/15 transition-transform group-hover:rotate-12 group-hover:scale-110">
-          <Zap className="size-4" aria-hidden />
-        </span>
-      </Button>
+        <ArrowRight className="size-6" aria-hidden />
+      </button>
     </form>
   )
 }

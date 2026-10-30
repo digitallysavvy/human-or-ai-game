@@ -4,14 +4,15 @@ import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * Audio-reactive blob rendered on canvas. `level` (0..1) drives displacement
- * from a live mic; `active` with no level synthesizes a speaking rhythm.
- * `hue` is an oklch hue. `hueDrift` cycles the hue (used while matching).
+ * Audio-reactive blob rendered flat on canvas: solid fill, ink outline, hard
+ * offset shadow. `level` (0..1) drives displacement from a live mic; `active`
+ * with no level synthesizes a speaking rhythm. `hue` is an oklch hue; a
+ * negative hue renders solid ink. `hueDrift` cycles the hue (while matching).
  */
 export function Orb({
   level = 0,
   active = false,
-  hue = 300,
+  hue = -1,
   hueDrift = false,
   size = 220,
   idle = 0.06,
@@ -43,14 +44,18 @@ export function Orb({
     canvas.width = px
     canvas.height = px
 
+    const css = getComputedStyle(document.documentElement)
+    const ink = css.getPropertyValue('--foreground').trim() || '#1a1a1a'
+    const paper = css.getPropertyValue('--background').trim() || '#f3f1ec'
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const POINTS = 120
     let t = Math.random() * 100
     let smooth = 0
     let raf = 0
-    let driftHue = hueRef.current
+    let driftHue = Math.max(0, hueRef.current)
 
-    const blob = (cx: number, cy: number, base: number, amp: number, phase: number, fill: string | CanvasGradient) => {
+    const blob = (cx: number, cy: number, base: number, amp: number, phase: number, fill: string, stroke?: string) => {
       ctx.beginPath()
       const pts: [number, number][] = []
       for (let i = 0; i < POINTS; i++) {
@@ -73,12 +78,19 @@ export function Orb({
       ctx.closePath()
       ctx.fillStyle = fill
       ctx.fill()
+      if (stroke) {
+        ctx.lineWidth = 3 * dpr
+        ctx.lineJoin = 'round'
+        ctx.strokeStyle = stroke
+        ctx.stroke()
+      }
     }
 
     const draw = () => {
       t += reduceMotion ? 0.003 : 0.014
-      if (hueDrift) driftHue = (driftHue + 0.6) % 360
+      if (hueDrift) driftHue = (driftHue + 0.8) % 360
       const h = hueDrift ? driftHue : hueRef.current
+      const mono = h < 0
 
       let target = levelRef.current
       if (activeRef.current && target < 0.05) {
@@ -89,28 +101,14 @@ export function Orb({
       ctx.clearRect(0, 0, px, px)
       const cx = px / 2
       const cy = px / 2
-      const base = px * 0.27
+      const base = px * 0.3
       const amp = base * (idle + smooth * 0.5)
+      const off = base * (0.1 + smooth * 0.1)
 
-      // Outer glow halo
-      const halo = ctx.createRadialGradient(cx, cy, base * 0.6, cx, cy, base * 1.9)
-      halo.addColorStop(0, `oklch(0.78 0.16 ${h} / ${0.28 + smooth * 0.35})`)
-      halo.addColorStop(1, `oklch(0.78 0.16 ${h} / 0)`)
-      ctx.fillStyle = halo
-      ctx.fillRect(0, 0, px, px)
-
-      // Back layer, slightly larger and translucent
-      blob(cx, cy, base * 1.08, amp * 1.3, 1.7, `oklch(0.7 0.17 ${h} / 0.35)`)
-
-      // Main body
-      const body = ctx.createRadialGradient(cx - base * 0.3, cy - base * 0.35, base * 0.1, cx, cy, base * 1.15)
-      body.addColorStop(0, `oklch(0.93 0.08 ${h})`)
-      body.addColorStop(0.45, `oklch(0.78 0.16 ${h})`)
-      body.addColorStop(1, `oklch(0.45 0.14 ${h})`)
-      blob(cx, cy, base, amp, 0, body)
-
-      // Inner highlight
-      blob(cx - base * 0.18, cy - base * 0.22, base * 0.45, amp * 0.4, 3.1, `oklch(0.98 0.03 ${h} / ${0.18 + smooth * 0.2})`)
+      // Hard offset shadow, same shape.
+      blob(cx + off, cy + off, base, amp, 0, mono ? paper : ink, ink)
+      // Body
+      blob(cx, cy, base, amp, 0, mono ? ink : `oklch(0.68 0.17 ${h})`, ink)
 
       raf = requestAnimationFrame(draw)
     }

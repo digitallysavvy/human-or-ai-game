@@ -4,9 +4,9 @@ import { RequireProfile } from '@/components/require-profile'
 
 export default function LobbyPage() {
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col border-foreground sm:border-x-2">
       <AppHeader />
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 pb-12 sm:px-8">
+      <main className="flex flex-1 flex-col">
         <RequireProfile>
           <LobbyView />
         </RequireProfile>

@@ -19,17 +19,15 @@ export function VerdictScreen({
   busy: boolean
 }) {
   const x = useMotionValue(0)
-  const rotate = useTransform(x, [-300, 300], [-14, 14])
+  const rotate = useTransform(x, [-300, 300], [-10, 10])
   const botOpacity = useTransform(x, [-THRESHOLD, -30], [1, 0])
   const humanOpacity = useTransform(x, [30, THRESHOLD], [0, 1])
-  const botScale = useTransform(x, [-THRESHOLD, 0], [1.15, 1])
-  const humanScale = useTransform(x, [0, THRESHOLD], [1, 1.15])
   const [locked, setLocked] = useState<Guess | null>(null)
 
   function commit(guess: Guess) {
     if (busy || locked) return
     setLocked(guess)
-    animate(x, guess === 'human' ? 600 : -600, { duration: 0.35, ease: [0.4, 0, 1, 1] }).then(() => onGuess(guess))
+    animate(x, guess === 'human' ? 600 : -600, { duration: 0.3, ease: [0.4, 0, 1, 1] }).then(() => onGuess(guess))
   }
 
   useEffect(() => {
@@ -44,16 +42,16 @@ export function VerdictScreen({
 
   return (
     <section className="flex flex-1 flex-col items-center justify-center gap-8 py-6">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <p className="text-xs tracking-[0.28em] text-primary uppercase">Line closed</p>
-        <h1 className="text-4xl font-semibold tracking-[-0.03em] text-balance sm:text-6xl">
-          So. <span className="font-serif font-normal italic">Who was that?</span>
+      <div className="flex flex-col items-center gap-3 text-center">
+        <p className="font-mono text-xs tracking-[0.3em] uppercase">Time&apos;s up</p>
+        <h1 className="text-4xl font-black tracking-[-0.04em] uppercase sm:text-6xl">
+          So. <span className="text-outline">Who was that?</span>
         </h1>
-        <p className="text-sm text-muted-foreground">Drag the card. Or tap a side. Arrow keys work too.</p>
+        <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">Drag the card · Tap a side · Arrow keys</p>
       </div>
 
       <div className="relative flex w-full max-w-3xl items-center justify-center">
-        <SideTarget kind="ai" opacity={botOpacity} scale={botScale} onClick={() => commit('ai')} disabled={busy || !!locked} />
+        <SideTarget kind="ai" opacity={botOpacity} onClick={() => commit('ai')} disabled={busy || !!locked} />
 
         <motion.div
           drag="x"
@@ -64,35 +62,27 @@ export function VerdictScreen({
             if (info.offset.x > THRESHOLD || info.velocity.x > 600) commit('human')
             else if (info.offset.x < -THRESHOLD || info.velocity.x < -600) commit('ai')
           }}
-          whileTap={{ scale: 1.02 }}
-          className="glass relative z-10 flex w-72 cursor-grab touch-none flex-col items-center gap-4 rounded-3xl p-6 shadow-2xl shadow-black/50 active:cursor-grabbing sm:w-80"
+          className="brut relative z-10 flex w-72 cursor-grab touch-none flex-col items-center gap-4 bg-background p-6 brut-shadow active:cursor-grabbing sm:w-80"
           aria-label={`Card for ${partner.name}. Drag right for human, left for AI.`}
         >
-          <motion.span
-            style={{ opacity: botOpacity }}
-            className="absolute top-5 left-5 -rotate-12 rounded-lg border-2 border-bot px-2 py-0.5 text-sm font-bold tracking-widest text-bot uppercase"
-          >
+          <motion.span style={{ opacity: botOpacity }} className="absolute top-4 left-4 -rotate-6 border-2 border-bot bg-background px-2 py-0.5 font-mono text-sm font-bold tracking-widest text-bot uppercase">
             AI
           </motion.span>
-          <motion.span
-            style={{ opacity: humanOpacity }}
-            className="absolute top-5 right-5 rotate-12 rounded-lg border-2 border-human px-2 py-0.5 text-sm font-bold tracking-widest text-human uppercase"
-          >
+          <motion.span style={{ opacity: humanOpacity }} className="absolute top-4 right-4 rotate-6 border-2 border-human bg-background px-2 py-0.5 font-mono text-sm font-bold tracking-widest text-human uppercase">
             Human
           </motion.span>
           <Orb hue={partner.hue} size={180} idle={0.05} />
           <div className="text-center">
-            <p className="text-2xl font-semibold tracking-tight">{partner.name}</p>
-            <p className="font-serif text-lg text-muted-foreground italic">{partner.vibe}</p>
+            <p className="text-2xl font-black tracking-tight uppercase">{partner.name}</p>
+            <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">{partner.vibe}</p>
           </div>
-          <div className="flex items-center gap-1 text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
-            <span>← AI</span>
-            <span className="mx-2 h-px w-8 bg-border" />
-            <span>Human →</span>
+          <div className="flex w-full items-center justify-between border-t-2 border-foreground pt-3 font-mono text-[11px] tracking-[0.2em] uppercase">
+            <span className="text-bot">← AI</span>
+            <span className="text-human">Human →</span>
           </div>
         </motion.div>
 
-        <SideTarget kind="human" opacity={humanOpacity} scale={humanScale} onClick={() => commit('human')} disabled={busy || !!locked} />
+        <SideTarget kind="human" opacity={humanOpacity} onClick={() => commit('human')} disabled={busy || !!locked} />
       </div>
     </section>
   )
@@ -101,36 +91,31 @@ export function VerdictScreen({
 function SideTarget({
   kind,
   opacity,
-  scale,
   onClick,
   disabled,
 }: {
   kind: Guess
   opacity: ReturnType<typeof useTransform<number, number>>
-  scale: ReturnType<typeof useTransform<number, number>>
   onClick: () => void
   disabled: boolean
 }) {
   const isHuman = kind === 'human'
   return (
-    <motion.button
+    <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      style={{ scale }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.95 }}
       className={cn(
-        'group absolute top-1/2 flex size-24 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-full border-2 transition-colors outline-none focus-visible:ring-4 sm:size-32',
+        'absolute top-1/2 flex size-24 -translate-y-1/2 flex-col items-center justify-center gap-1 border-2 bg-background transition-colors outline-none focus-visible:ring-4 sm:size-32',
         isHuman
-          ? 'right-0 border-human/40 text-human hover:bg-human/15 focus-visible:ring-human/40'
-          : 'left-0 border-bot/40 text-bot hover:bg-bot/15 focus-visible:ring-bot/40',
+          ? 'right-0 border-human text-human brut-shadow-human hover:bg-human hover:text-human-foreground focus-visible:ring-human/40'
+          : 'left-0 border-bot text-bot brut-shadow-bot hover:bg-bot hover:text-bot-foreground focus-visible:ring-bot/40',
       )}
       aria-label={isHuman ? 'Human' : 'AI'}
     >
-      <motion.span style={{ opacity }} className={cn('absolute inset-0 rounded-full', isHuman ? 'bg-human/25' : 'bg-bot/25')} aria-hidden />
+      <motion.span style={{ opacity }} className={cn('absolute inset-0', isHuman ? 'bg-human/20' : 'bg-bot/20')} aria-hidden />
       {isHuman ? <UserRound className="relative size-8 sm:size-10" aria-hidden /> : <Bot className="relative size-8 sm:size-10" aria-hidden />}
-      <span className="relative text-xs font-semibold tracking-widest uppercase">{isHuman ? 'Human' : 'AI'}</span>
-    </motion.button>
+      <span className="relative font-mono text-xs font-bold tracking-widest uppercase">{isHuman ? 'Human' : 'AI'}</span>
+    </button>
   )
 }

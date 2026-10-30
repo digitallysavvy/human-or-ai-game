@@ -25,23 +25,21 @@ export function MatchingScreen({ name, onCancel }: { name: string; onCancel: () 
 
   return (
     <section className="flex flex-1 flex-col items-center justify-center gap-10 py-12 text-center" aria-live="polite">
-      <div className="relative flex items-center justify-center">
-        <span className="ring-pulse absolute size-56 rounded-full border border-foreground/30" aria-hidden />
-        <span className="ring-pulse absolute size-56 rounded-full border border-foreground/20" style={{ animationDelay: '0.9s' }} aria-hidden />
+      <div className="flex flex-col items-center gap-4">
         <Orb hueDrift active size={260} idle={0.1} />
-        <span className="absolute font-mono text-sm tracking-[0.4em] text-background/80 mix-blend-difference" aria-hidden>
+        <span className="brut bg-background px-3 py-1 font-mono text-sm tracking-[0.4em]" aria-hidden>
           {scramble}
         </span>
       </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-xs tracking-[0.28em] text-primary uppercase">Connecting {name}</p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+      <div className="flex flex-col gap-3">
+        <p className="font-mono text-xs tracking-[0.3em] uppercase">Connecting {name}</p>
+        <h1 className="text-4xl font-black tracking-[-0.04em] uppercase sm:text-6xl">
           {LINES[step]}
-          <span className="blink">…</span>
+          <span className="blink">_</span>
         </h1>
-        <p className="font-serif text-xl text-muted-foreground italic">Could be anyone. Could be anything.</p>
+        <p className="text-muted-foreground">Could be anyone. Could be anything.</p>
       </div>
-      <Button variant="ghost" onClick={onCancel} className="text-muted-foreground">
+      <Button variant="outline" onClick={onCancel}>
         <X data-icon="inline-start" aria-hidden />
         Cancel
       </Button>

@@ -1,7 +1,7 @@
-/** oklch hues for the triadic palette. Keep in sync with app/globals.css. */
-export const PRIMARY_HUE = 300
-export const HUMAN_HUE = 200
-export const BOT_HUE = 40
-/** Your own orb always renders in the primary hue. */
-export const YOU_HUE = PRIMARY_HUE
-export const PALETTE_HUES = [PRIMARY_HUE, HUMAN_HUE, BOT_HUE]
+/** oklch hues used by the Orb. Keep in sync with app/globals.css. */
+export const HUMAN_HUE = 262
+export const BOT_HUE = 28
+/** Negative hue = solid ink. Your own orb is always ink. */
+export const INK = -1
+export const YOU_HUE = INK
+export const PALETTE_HUES = [INK, HUMAN_HUE, BOT_HUE]
