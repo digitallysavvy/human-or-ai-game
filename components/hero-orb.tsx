@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Orb } from '@/components/orb'
 import { PALETTE_HUES as HUES } from '@/lib/theme'
 
-const LABELS = ['Ink', 'Human', 'AI']
+const LABELS = ['Undecided', 'Sounds human', 'Sounds synthetic']
 const CYCLE_MS = 3200
 
 /** Landing orb: pointer speed becomes "voice" level; its mood cycles on its own. */
@@ -61,7 +61,7 @@ export function HeroOrb() {
       aria-hidden
     >
       <Orb level={level} hue={HUES[hueIndex]} size={size} idle={0.08} />
-      <span className="font-mono text-xs tracking-[0.25em] uppercase">Mode: {LABELS[hueIndex]}</span>
+      <span className="font-mono text-xs tracking-[0.25em] uppercase">{LABELS[hueIndex]}</span>
     </div>
   )
 }

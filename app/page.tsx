@@ -4,22 +4,34 @@ import { HeroOrb } from '@/components/hero-orb'
 import { JoinForm } from '@/components/join-form'
 
 const TELLS = [
-  'too-perfect grammar',
-  'answers a beat too fast',
-  'never says um',
-  'laughs at the wrong time',
-  'knows too much',
-  'ends every line with a question',
-  'forgets what you said',
-  'eats mid-sentence',
-  'apologizes for silence',
-  'agrees a little too quickly',
+  'They never once said \u201cum\u201d',
+  'They laughed half a beat late',
+  'They remembered everything',
+  'They paused before every answer',
+  'They knew the exact date',
+  'They agreed too fast',
+  'They sounded tired',
+  'They changed the subject',
+  'They asked how I was \u2014 twice',
+  'They apologized for nothing',
 ]
 
 const STEPS = [
-  { n: '01', title: 'Get connected', body: 'You\u2019re matched with a random voice. No face. No profile.' },
-  { n: '02', title: 'Talk for a minute', body: 'Ask anything. Listen for the tells.' },
-  { n: '03', title: 'Call it', body: 'Human or AI. The reveal is instant. Then you\u2019re matched again.' },
+  {
+    n: '01',
+    title: 'Pick up',
+    body: 'A random voice answers. No name, no face, no hints \u2014 just whoever, or whatever, is on the line.',
+  },
+  {
+    n: '02',
+    title: 'Pry',
+    body: 'Sixty seconds. Ask what a machine can\u2019t fake. Listen for what a person can\u2019t hide.',
+  },
+  {
+    n: '03',
+    title: 'Make the call',
+    body: 'Human or AI. Lock it in and the truth drops instantly. Then the next line rings.',
+  },
 ]
 
 export default function JoinPage() {
@@ -31,14 +43,14 @@ export default function JoinPage() {
           Turing Line
         </div>
         <p className="hidden items-center justify-center font-mono text-xs tracking-[0.3em] text-muted-foreground uppercase md:flex">
-          Voice roulette · 60-second rounds · No faces
+          One voice · One minute · One guess
         </p>
         <ActivePlayers className="border-l-2 border-foreground px-5" />
       </header>
 
       <section className="grid flex-1 border-b-2 border-foreground lg:grid-cols-[1.15fr_1fr]">
         <div className="flex flex-col border-b-2 border-foreground lg:border-r-2 lg:border-b-0">
-          <CellHeader left="01 / The question" right="Sixty seconds. One call." />
+          <CellHeader left="01 / The line is open" right="Someone is waiting" />
           <div className="grid flex-1 items-center gap-6 px-5 py-8 sm:grid-cols-[1fr_auto] sm:px-8">
             <div className="flex flex-col gap-4">
               <h1 className="text-[clamp(3rem,7.5vw,7rem)] leading-[0.85] font-black tracking-[-0.05em] uppercase">
@@ -49,7 +61,8 @@ export default function JoinPage() {
                 <span className="text-outline">You decide.</span>
               </h1>
               <p className="max-w-sm text-base leading-snug text-pretty text-muted-foreground">
-                Get connected to a stranger&apos;s voice. Talk for sixty seconds. Then make the call.
+                A stranger picks up. They hesitate, laugh at your joke, ask about your day. Maybe
+                they mean it. Maybe they were built to. You have sixty seconds to find out.
               </p>
             </div>
             <div className="flex justify-center">
@@ -58,14 +71,14 @@ export default function JoinPage() {
           </div>
         </div>
         <div className="flex flex-col">
-          <CellHeader left="02 / Enter" right="Scores stay on device" />
+          <CellHeader left="02 / Take the call" right="Your streak starts now" />
           <div className="flex flex-1 flex-col justify-center px-5 py-8 sm:px-8">
             <JoinForm />
           </div>
         </div>
       </section>
 
-      <div className="overflow-hidden border-b-2 border-foreground py-3 font-mono text-sm tracking-wide uppercase" aria-label="Tells to listen for">
+      <div className="overflow-hidden border-b-2 border-foreground py-3 font-mono text-sm tracking-wide uppercase" aria-label="What players swear gave it away">
         <div className="marquee flex w-max">
           {[...TELLS, ...TELLS].map((tell, i) => (
             <span key={i} className="flex items-center">
@@ -90,7 +103,7 @@ export default function JoinPage() {
 
       <footer className="flex items-center justify-between px-5 py-4 font-mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
         <span>Turing Line</span>
-        <span>No accounts · No recordings</span>
+        <span>Calls are never recorded · Scores stay on your device</span>
       </footer>
     </main>
   )
